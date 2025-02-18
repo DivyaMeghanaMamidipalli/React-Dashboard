@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Box, Button, ButtonGroup, Paper } from '@mui/material';
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatItalicIcon from '@mui/icons-material/FormatItalic';
@@ -12,28 +12,60 @@ interface RichTextEditorProps {
 
 const RichTextEditor: React.FC<RichTextEditorProps> = ({ initialValue = '', onChange }) => {
   const [content, setContent] = useState(initialValue);
+  const editorRef = useRef<HTMLDivElement>(null);
 
   const handleExecCommand = (command: string, value: string = '') => {
+    // Focus the editor before executing command
+    if (editorRef.current) {
+      editorRef.current.focus();
+    }
     document.execCommand(command, false, value);
   };
 
-  useEffect(() => {
-    onChange?.(content);
-  }, [content, onChange]);
+  const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
+    const newContent = e.currentTarget.innerHTML;
+    setContent(newContent);
+    onChange?.(newContent);
+  };
+
+  // Ensure the cursor is placed at the end of content when focusing
+  const handleFocus = () => {
+    const el = editorRef.current;
+    if (el) {
+      const range = document.createRange();
+      const selection = window.getSelection();
+      range.selectNodeContents(el);
+      range.collapse(false);
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+    }
+  };
 
   return (
     <Box sx={{ width: '100%' }}>
       <ButtonGroup variant="outlined" sx={{ mb: 2 }}>
-        <Button onClick={() => handleExecCommand('bold')}>
+        <Button 
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={() => handleExecCommand('bold')}
+        >
           <FormatBoldIcon />
         </Button>
-        <Button onClick={() => handleExecCommand('italic')}>
+        <Button 
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={() => handleExecCommand('italic')}
+        >
           <FormatItalicIcon />
         </Button>
-        <Button onClick={() => handleExecCommand('underline')}>
+        <Button 
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={() => handleExecCommand('underline')}
+        >
           <FormatUnderlinedIcon />
         </Button>
-        <Button onClick={() => handleExecCommand('insertUnorderedList')}>
+        <Button 
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={() => handleExecCommand('insertUnorderedList')}
+        >
           <FormatListBulletedIcon />
         </Button>
       </ButtonGroup>
@@ -45,10 +77,18 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ initialValue = '', onCh
         }}
       >
         <div
+          ref={editorRef}
           contentEditable
-          style={{ outline: 'none', minHeight: '100%' }}
-          onInput={(e) => setContent(e.currentTarget.innerHTML)}
-          dangerouslySetInnerHTML={{ __html: content }}
+          onInput={handleInput}
+          onFocus={handleFocus}
+          suppressContentEditableWarning
+          className="rich-text-editor"
+          style={{
+            minHeight: '100%',
+            outline: 'none',
+            padding: '8px',
+            overflowY: 'auto'
+          }}
         />
       </Paper>
     </Box>
