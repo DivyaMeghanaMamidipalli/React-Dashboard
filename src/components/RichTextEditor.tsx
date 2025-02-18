@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import { Box, Button, ButtonGroup, Paper } from '@mui/material';
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatItalicIcon from '@mui/icons-material/FormatItalic';
@@ -15,7 +15,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ initialValue = '', onCh
   const editorRef = useRef<HTMLDivElement>(null);
 
   const handleExecCommand = (command: string, value: string = '') => {
-    // Focus the editor before executing command
     if (editorRef.current) {
       editorRef.current.focus();
     }
@@ -28,7 +27,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ initialValue = '', onCh
     onChange?.(newContent);
   };
 
-  // Ensure the cursor is placed at the end of content when focusing
   const handleFocus = () => {
     const el = editorRef.current;
     if (el) {
@@ -42,7 +40,10 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ initialValue = '', onCh
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ 
+      width: '100%',
+      maxWidth: '100%' // Ensure the box doesn't exceed parent width
+    }}>
       <ButtonGroup variant="outlined" sx={{ mb: 2 }}>
         <Button 
           onMouseDown={(e) => e.preventDefault()}
@@ -73,7 +74,12 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ initialValue = '', onCh
         sx={{ 
           p: 2, 
           minHeight: '200px',
+          maxHeight: '600px', // Add a maximum height if desired
           border: '1px solid #ccc',
+          width: '100%',
+          maxWidth: '100%', // Ensure paper doesn't exceed parent width
+          overflowY: 'auto', // Allow vertical scrolling
+          overflowX: 'hidden' // Prevent horizontal scrolling
         }}
       >
         <div
@@ -87,7 +93,12 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ initialValue = '', onCh
             minHeight: '100%',
             outline: 'none',
             padding: '8px',
-            overflowY: 'auto'
+            width: '100%',
+            maxWidth: '100%',
+            wordWrap: 'break-word', // Enable word wrapping
+            wordBreak: 'break-word', // Handle long words
+            whiteSpace: 'pre-wrap', // Preserve line breaks but wrap text
+            overflowWrap: 'break-word', // Additional wrapping support
           }}
         />
       </Paper>
