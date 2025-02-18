@@ -17,21 +17,7 @@ export const CountContext = createContext<{
 const App: React.FC = () => {
   const [count, setCount] = useState(0);
 
-  // const springs = useSpring({
-  //   from: { 
-  //     background: 'linear-gradient(135deg, #E3F2FD 0%, #E8EAF6 100%)'
-  //   },
-  //   to: {
-  //     background: `linear-gradient(135deg, 
-  //       ${count > 25 ? '#3F51B5' : `hsl(${230 + (count * 2)}, ${60 + count}%, ${80 - count}%)`} 0%, 
-  //       ${count > 25 ? '#1A237E' : `hsl(${240 + (count * 2)}, ${65 + count}%, ${75 - count}%)`} 100%)`
-  //   },
-  //   config: {
-  //     tension: 120,
-  //     friction: 14,
-  //     duration: 500,
-  //   }
-  // });
+  
   const springs = useSpring({
     from: { 
       background: 'linear-gradient(135deg, #E3F2FD 0%, #E8EAF6 100%)'
@@ -60,7 +46,7 @@ const App: React.FC = () => {
             transition: 'background 0.5s ease'
           }}>
             <Container maxWidth="lg">
-              <Box sx={{ py: 3 }}>  {/* Reduced padding */}
+              <Box sx={{ py: 3 }}>  
                 <Routes>
                   <Route path="/" element={
                     <Box display="grid" gridTemplateColumns="1fr 1fr" gap={4}>
@@ -72,7 +58,7 @@ const App: React.FC = () => {
                         p: 3, 
                         borderRadius: 2,
                         backdropFilter: 'blur(10px)',
-                        height: 'fit-content'  // Changed to fit-content
+                        height: 'fit-content'  
                       }}>
                         <UserForm />
                       </Box>

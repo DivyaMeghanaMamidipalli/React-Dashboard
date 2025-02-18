@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, TextField, Button, MenuItem, CircularProgress } from '@mui/material';
+import { Box, TextField, Button, MenuItem, CircularProgress, Paper, Typography } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 
 interface UserData {
@@ -22,7 +22,7 @@ const UserForm: React.FC = () => {
     name: '',
     address: '',
     email: '',
-    countryCode: '+1', // Default country code
+    countryCode: '+91',
     phone: ''
   });
   const [isDirty, setIsDirty] = useState(false);
@@ -32,6 +32,24 @@ const UserForm: React.FC = () => {
   });
   const [countries, setCountries] = useState<Country[]>([]);
   const [loading, setLoading] = useState(false);
+
+  // Add beforeunload event handler
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isDirty) {
+        e.preventDefault();
+        e.returnValue = ''; // This is required for Chrome
+        return ''; // This is required for other browsers
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isDirty]);
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -43,7 +61,7 @@ const UserForm: React.FC = () => {
         const countryList = data.map((country: any) => ({
           name: country.name.common,
           code: country.idd?.root + (country.idd?.suffixes ? country.idd.suffixes[0] : '')
-        })).filter((c: Country) => c.code); // Filter out countries without calling codes
+        })).filter((c: Country) => c.code);
 
         setCountries(countryList);
       } catch (error) {
@@ -106,7 +124,11 @@ const UserForm: React.FC = () => {
       allUserData = JSON.parse(existingData);
     }
 
-    allUserData.push({ ...userData, phone: combinedPhone });
+    allUserData.push({ 
+      ...userData, 
+      phone: combinedPhone,
+      createdAt: new Date().toISOString()
+    });
 
     localStorage.setItem('userData', JSON.stringify(allUserData));
 
@@ -123,63 +145,90 @@ const UserForm: React.FC = () => {
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-    <TextField
-      disabled
-      label="User ID"
-      value={userData.id}
-    />
-    <TextField
-        name="name"
-        label="Name"
-        value={userData.name}
-        onChange={handleChange}
-      />
-      <TextField
-        name="address"
-        label="Address"
-        value={userData.address}
-        onChange={handleChange}
-      />
-      <TextField
-        name="email"
-        label="Email"
-        type="email"
-        value={userData.email}
-        onChange={handleChange}
-        error={!!errors.email}
-        helperText={errors.email}
-      />
+    <Paper 
+      elevation={3} 
+      sx={{ 
+        maxWidth: '600px', 
+        p: 3,
+      }}
+    >
+      <Typography 
+        variant="h5" 
+        component="h2" 
+        gutterBottom 
+        sx={{ 
+          mb: 3,
+          textAlign: 'center'
+        }}
+      >
+        User Registration Form
+      </Typography>
 
-      <Box display="flex" gap={2}>
+      <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         <TextField
-          select
-          name="countryCode"
-          label="Country Code"
-          value={userData.countryCode}
+          disabled
+          label="User ID"
+          value={userData.id}
+        />
+        <TextField
+          name="name"
+          label="Name"
+          value={userData.name}
           onChange={handleChange}
-          sx={{ width: '30%' }}
+        />
+        <TextField
+          name="address"
+          label="Address"
+          value={userData.address}
+          onChange={handleChange}
+        />
+        <TextField
+          name="email"
+          label="Email"
+          type="email"
+          value={userData.email}
+          onChange={handleChange}
+          error={!!errors.email}
+          helperText={errors.email}
+        />
+
+        <Box display="flex" gap={2}>
+          <TextField
+            select
+            name="countryCode"
+            label="Country Code"
+            value={userData.countryCode}
+            onChange={handleChange}
+            sx={{ width: '30%' }}
+          >
+            {countries.map((country) => (
+              <MenuItem key={country.code} value={country.code}>
+                {country.name} ({country.code})
+              </MenuItem>
+            ))}
+          </TextField>
+
+          <TextField
+            name="phone"
+            label="Phone"
+            value={userData.phone}
+            onChange={handleChange}
+            error={!!errors.phone}
+            helperText={errors.phone}
+            sx={{ width: '70%' }}
+          />
+        </Box>
+
+        <Button 
+          type="submit" 
+          variant="contained" 
+          disabled={loading}
+          sx={{ mt: 2 }}
         >
-          {countries.map((country) => (
-            <MenuItem key={country.code} value={country.code}>
-              {country.name} ({country.code})
-            </MenuItem>
-          ))}
-        </TextField>
-
-      <TextField
-        name="phone"
-        label="Phone"
-        value={userData.phone}
-        onChange={handleChange}
-        error={!!errors.phone}
-        helperText={errors.phone}
-        sx={{ width: '70%' }}
-      />
+          {loading ? <CircularProgress size={24} /> : 'Save'}
+        </Button>
       </Box>
-
-      <Button type="submit" variant="contained">Save</Button>
-    </Box>
+    </Paper>
   );
 };
 
