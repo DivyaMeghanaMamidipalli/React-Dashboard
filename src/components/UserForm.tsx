@@ -124,7 +124,12 @@ const UserForm: React.FC = () => {
 
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <TextField
+    <TextField
+      disabled
+      label="User ID"
+      value={userData.id}
+    />
+    <TextField
         name="name"
         label="Name"
         value={userData.name}
