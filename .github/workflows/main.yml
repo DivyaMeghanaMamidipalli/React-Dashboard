@@ -1,9 +1,9 @@
-name: Deploy to EC2
+name: Deploy to S3
 
 on:
   push:
     branches:
-      - main  # Trigger the workflow on pushes to the main branch
+      - main  # Trigger the workflow on push to the main branch
 
 jobs:
   deploy:
@@ -14,26 +14,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. Set up AWS CLI using GitHub Secrets
+      # 2. Set up AWS CLI using GitHub Secrets (AWS credentials)
       - name: Set up AWS CLI
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1  # Change this to your EC2 region
+          aws-region: us-east-1  # Update this to your S3 region
 
-      # 3. Set up SSH key for EC2 access
-      - name: Set up SSH key for EC2
+      # 3. Sync files to S3 Bucket
+      - name: Sync files to S3
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SEC_KEY }}" | base64 --decode > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-
-      # 4. Deploy to EC2 via SSH
-      - name: Deploy to EC2
-        run: |
-            ssh -o StrictHostKeyChecking=no ec2-user@<EC2_PUBLIC_IP> \
-            "cd /path/to/your/app || exit; \
-             git pull origin main || exit; \
-             npm install || exit; \
-             pm2 restart app || exit"
+          aws s3 sync . s3://${{ secrets.S3_BUCKET_NAME }} --exclude ".git/*" --exclude ".github/*" --delete
