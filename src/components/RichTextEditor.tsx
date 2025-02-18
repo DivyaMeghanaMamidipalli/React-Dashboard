@@ -42,7 +42,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ initialValue = '', onCh
   return (
     <Box sx={{ 
       width: '100%',
-      maxWidth: '100%' // Ensure the box doesn't exceed parent width
+      maxWidth: '100%' 
     }}>
       <ButtonGroup variant="outlined" sx={{ mb: 2 }}>
         <Button 
@@ -74,12 +74,12 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ initialValue = '', onCh
         sx={{ 
           p: 2, 
           minHeight: '200px',
-          maxHeight: '600px', // Add a maximum height if desired
+          maxHeight: '600px', 
           border: '1px solid #ccc',
           width: '100%',
-          maxWidth: '100%', // Ensure paper doesn't exceed parent width
-          overflowY: 'auto', // Allow vertical scrolling
-          overflowX: 'hidden' // Prevent horizontal scrolling
+          maxWidth: '100%',
+          overflowY: 'auto', 
+          overflowX: 'hidden' 
         }}
       >
         <div
@@ -95,10 +95,10 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ initialValue = '', onCh
             padding: '8px',
             width: '100%',
             maxWidth: '100%',
-            wordWrap: 'break-word', // Enable word wrapping
-            wordBreak: 'break-word', // Handle long words
-            whiteSpace: 'pre-wrap', // Preserve line breaks but wrap text
-            overflowWrap: 'break-word', // Additional wrapping support
+            wordWrap: 'break-word', 
+            wordBreak: 'break-word', 
+            whiteSpace: 'pre-wrap', 
+            overflowWrap: 'break-word', 
           }}
         />
       </Paper>
