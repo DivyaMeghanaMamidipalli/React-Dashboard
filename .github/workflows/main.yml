@@ -12,6 +12,14 @@ jobs:
       # 1. Check out the latest code
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - uses : actions/setup-node@v4
+        with :
+          node-version : 20
+      - name : Install node modules
+        run : npm install
+      - name : Build the project for production
+        run : npm run build
       
       # 2. Sync files to S3 bucket
       - name: Sync to S3
