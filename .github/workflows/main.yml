@@ -1,0 +1,40 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main  # Trigger the workflow on pushes to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu environment
+
+    steps:
+      # 1. Checkout the repository code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # 2. Set up AWS CLI using GitHub Secrets
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1  # Change this to your EC2 region
+
+      # 3. Set up SSH key for EC2 access
+      - name: Set up SSH key for EC2
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SEC_KEY }}" | base64 --decode > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      # 4. Deploy to EC2 via SSH
+      - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ec2-user@<EC2_PUBLIC_IP> << 'EOF'
+            cd /path/to/your/app || exit
+            git pull origin main || exit
+            npm install || exit
+            pm2 restart app || exit  # Adjust as needed for your app
+          EOF
