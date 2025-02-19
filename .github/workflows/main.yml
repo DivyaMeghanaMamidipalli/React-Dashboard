@@ -13,15 +13,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - uses : actions/setup-node@v4
-        with :
-          node-version : 20
-      - name : Install node modules
-        run : npm install
-      - name : Build the project for production
-        run : npm run build
+      # 2. Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 3. Navigate to the project directory and install dependencies
+      - name: Install node modules
+        run: |
+          cd user-dashboard
+          npm install
       
-      # 2. Sync files to S3 bucket
+      # 4. Build the project for production
+      - name: Build the project
+        run: |
+          cd user-dashboard
+          npm run build
+      
+      # 5. Sync built files to S3 bucket
       - name: Sync to S3
         uses: jakejarvis/s3-sync-action@master
         with:
@@ -30,5 +40,5 @@ jobs:
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: 'us-east-1'   # Change to your region if different
-          SOURCE_DIR: 'user-dashboard'  # Make sure this is the correct directory
+          AWS_REGION: 'us-east-1'  
+          SOURCE_DIR: 'user-dashboard/build' 
