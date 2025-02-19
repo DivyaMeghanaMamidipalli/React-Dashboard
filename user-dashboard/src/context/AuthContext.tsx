@@ -36,7 +36,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const checkUser = async () => {
     try {
       setError(null);
-      const response = await fetch('http://localhost:5000/auth/user', {
+      const response = await fetch('https://react-dashboard-backend-45op.onrender.com/auth/user', {
         credentials: 'include'
       });
       
@@ -55,13 +55,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const login = () => {
-    window.location.href = 'http://localhost:5000/auth/google';
+    window.location.href = 'https://react-dashboard-backend-45op.onrender.com/auth/google';
   };
 
   const logout = async () => {
     try {
       setError(null);
-      const response = await fetch('http://localhost:5000/auth/logout', {
+      const response = await fetch('https://react-dashboard-backend-45op.onrender.com/auth/logout', {
         credentials: 'include'
       });
       
