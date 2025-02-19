@@ -10,13 +10,16 @@ const app = express();
 
 
 // Middleware
-app.use(cors({ origin: 'https://react-dashboard-frontend-0d2e.onrender.com', credentials: true }));
+app.use(cors({ origin: FRONTEND_URL, credentials: true }));
 app.use(express.json());
 app.use(session({
   secret: process.env.SESSION_SECRET || 'your-secret-key',
   resave: false,
-  saveUninitialized: false
-}));
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // Required for cross-site cookies in production
+  }
 app.use(passport.initialize());
 app.use(passport.session());
 
