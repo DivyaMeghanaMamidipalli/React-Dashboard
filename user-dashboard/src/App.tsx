@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route,Navigate } from 'react-router-dom';
 import { Box, Container, CssBaseline } from '@mui/material';
 import { useSpring, animated } from '@react-spring/web';
 import Counter from './components/Counter';
@@ -8,6 +8,10 @@ import RichTextEditor from './components/RichTextEditor';
 import ProfileTrendsDashboard from './components/ProfileTrendsDashboard';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import Login from './components/Login';
+import Logout from './components/Logout';
 
 export const CountContext = createContext<{
   count: number;
@@ -35,52 +39,63 @@ const App: React.FC = () => {
   });
 
   return (
-    <CountContext.Provider value={{ count, setCount }}>
-      <Router>
-        <Box display="flex" flexDirection="column" minHeight="100vh">
-          <CssBaseline />
-          <Header />
-          <animated.div style={{
-            ...springs,
-            flex: 1,
-            transition: 'background 0.5s ease'
-          }}>
-            <Container maxWidth="lg">
-              <Box sx={{ py: 3 }}>  
-                <Routes>
-                  <Route path="/" element={
-                    <Box display="grid" gridTemplateColumns="1fr 1fr" gap={4}>
-                      <Box gridColumn="1 / -1">
-                        <Counter />
-                      </Box>
-                      <Box sx={{ 
-                        backgroundColor: 'rgba(255, 255, 255, 0.8)', 
-                        p: 3, 
-                        borderRadius: 2,
-                        backdropFilter: 'blur(10px)',
-                        height: 'fit-content'  
-                      }}>
-                        <UserForm />
-                      </Box>
-                      <Box sx={{ 
-                        backgroundColor: 'rgba(255, 255, 255, 0.8)', 
-                        p: 3, 
-                        borderRadius: 2,
-                        backdropFilter: 'blur(10px)'
-                      }}>
-                        <RichTextEditor />
-                      </Box>
-                    </Box>
-                  } />
-                  <Route path="/profile-dashboard" element={<ProfileTrendsDashboard />} />
-                </Routes>
-              </Box>
-            </Container>
-          </animated.div>
-          <Footer />
-        </Box>
-      </Router>
-    </CountContext.Provider>
+    <AuthProvider>
+      <CountContext.Provider value={{ count, setCount }}>
+        <Router>
+          <Box display="flex" flexDirection="column" minHeight="100vh">
+            <CssBaseline />
+            <Header />
+            <animated.div style={{
+              ...springs,
+              flex: 1,
+              transition: 'background 0.5s ease'
+            }}>
+              <Container maxWidth="lg">
+                <Box sx={{ py: 3 }}>
+                  <Routes>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/logout" element={<Logout />} />
+                    <Route path="/" element={
+                      <ProtectedRoute>
+                        <Box display="grid" gridTemplateColumns="1fr 1fr" gap={4}>
+                          <Box gridColumn="1 / -1">
+                            <Counter />
+                          </Box>
+                          <Box sx={{ 
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)', 
+                            p: 3, 
+                            borderRadius: 2,
+                            backdropFilter: 'blur(10px)',
+                            height: 'fit-content'  
+                          }}>
+                            <UserForm />
+                          </Box>
+                          <Box sx={{ 
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)', 
+                            p: 3, 
+                            borderRadius: 2,
+                            backdropFilter: 'blur(10px)'
+                          }}>
+                            <RichTextEditor />
+                          </Box>
+                        </Box>
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/profile-dashboard" element={
+                      <ProtectedRoute>
+                        <ProfileTrendsDashboard />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                  </Routes>
+                </Box>
+              </Container>
+            </animated.div>
+            <Footer />
+          </Box>
+        </Router>
+      </CountContext.Provider>
+    </AuthProvider>
   );
 };
 

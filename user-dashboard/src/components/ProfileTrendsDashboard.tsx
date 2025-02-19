@@ -1,4 +1,4 @@
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   LineChart,
   Line,
@@ -13,12 +13,15 @@ import {
 } from 'recharts';
 import UserDataDisplay from './UserDataDisplay';
 
-
 interface UserData {
   address?: string;
   createdAt: string;
-  deletedAt?: string;
 };
+
+interface DeletedUserData {
+  userId: string;
+  deletedAt: string;
+}
 
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300'];
 
@@ -32,6 +35,7 @@ const ProfileTrendsDashboard = () => {
     const deletedUsers = JSON.parse(localStorage.getItem('deletedUsers') || '[]');
     setProfileData(userData);
 
+    // Address statistics calculation
     const addressCounts = userData.reduce((acc, entry) => {
       const address = entry.address || 'Unknown';
       acc[address] = (acc[address] || 0) + 1;
@@ -44,8 +48,10 @@ const ProfileTrendsDashboard = () => {
     }));
     setAddressStats(addressData);
 
+    // Time statistics calculation
     const dateMap = new Map();
 
+    // Process created users
     userData.forEach(entry => {
       const date = new Date(entry.createdAt).toLocaleDateString();
       if (!dateMap.has(date)) {
@@ -53,8 +59,9 @@ const ProfileTrendsDashboard = () => {
       }
       dateMap.get(date).creations += 1;
     });
- 
-    deletedUsers.forEach(entry => {
+
+    // Process deleted users
+    deletedUsers.forEach((entry: DeletedUserData) => {
       const date = new Date(entry.deletedAt).toLocaleDateString();
       if (!dateMap.has(date)) {
         dateMap.set(date, { date, creations: 0, deletions: 0 });
@@ -62,6 +69,7 @@ const ProfileTrendsDashboard = () => {
       dateMap.get(date).deletions += 1;
     });
 
+    // Convert to array and sort by date
     const timeData = Array.from(dateMap.values())
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
@@ -72,10 +80,9 @@ const ProfileTrendsDashboard = () => {
     <div className="w-full max-w-6xl mx-auto p-4">
       <h2 className="text-2xl font-bold mb-6 text-center">Profile Analytics Dashboard</h2>
       <div>
-        <UserDataDisplay/>
+        <UserDataDisplay />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Time Trend Chart */}
         <div className="bg-white p-4 rounded-lg shadow">
           <h3 className="text-lg font-semibold mb-4">Profile Updates Over Time</h3>
           <LineChart width={500} height={300} data={timeStats}>
@@ -99,7 +106,6 @@ const ProfileTrendsDashboard = () => {
           </LineChart>
         </div>
 
-        {/* Address Distribution Chart */}
         <div className="bg-white p-4 rounded-lg shadow">
           <h3 className="text-lg font-semibold mb-4">Address Distribution</h3>
           <PieChart width={500} height={300}>
@@ -124,4 +130,5 @@ const ProfileTrendsDashboard = () => {
     </div>
   );
 };
+
 export default ProfileTrendsDashboard;

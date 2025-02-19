@@ -113,7 +113,7 @@ const UserForm: React.FC = () => {
 
     if (!validateForm()) return;
 
-    const combinedPhone = `${userData.countryCode}${userData.phone}`;
+    const phoneNumber = userData.phone ? `${userData.countryCode}${userData.phone}` : '';
 
     const existingData = localStorage.getItem('userData');
     let allUserData = [];
@@ -124,7 +124,7 @@ const UserForm: React.FC = () => {
 
     allUserData.push({ 
       ...userData, 
-      phone: combinedPhone,
+      phone: phoneNumber,
       createdAt: new Date().toISOString()
     });
 
@@ -137,7 +137,7 @@ const UserForm: React.FC = () => {
       name: '',
       address: '',
       email: '',
-      countryCode: '+1',
+      countryCode: '+91',
       phone: ''
     });
   };

@@ -15,6 +15,8 @@
     "@mui/icons-material": "^6.4.4",
     "@mui/material": "^6.4.4",
     "@react-spring/web": "^9.7.5",
+    "@types/passport": "^1.0.17",
+    "@types/passport-google-oauth20": "^2.0.16",
     "@types/uuid": "^10.0.0",
     "aws-sdk": "^2.1692.0",
     "klaw-sync": "^6.0.0",
