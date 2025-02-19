@@ -35,9 +35,9 @@ const Counter: React.FC = () => {
           variant="contained" 
           onClick={handleIncrement}
           sx={{
-            bgcolor: ' #95E1D3 ',
+            bgcolor: 'rgb(30, 177, 22) ',
             '&:hover': {
-              bgcolor: '#7DCDC0' 
+              bgcolor: 'rgb(30, 177, 22)' 
             }
           }}
         >
@@ -47,11 +47,13 @@ const Counter: React.FC = () => {
           variant="outlined" 
           onClick={handleReset}
           sx={{
-            color: 'white', 
-            borderColor: 'white',
+            color: 'black', 
+            bgcolor:'rgba(233, 234, 222, 0.7)',
+            borderColor: 'black',
+            
             '&:hover': {
-              borderColor: '#45B7AF',
-              bgcolor: 'rgba(197, 211, 48, 0.04)' 
+              borderColor: '#black',
+              bgcolor: 'rgba(233, 234, 222, 0.7)' 
             }
           }}
         >
@@ -61,9 +63,9 @@ const Counter: React.FC = () => {
           variant="contained" 
           onClick={handleDecrement}
           sx={{
-            bgcolor: '#FF6B6B', 
+            bgcolor: 'red', 
             '&:hover': {
-              bgcolor: '#FF5252' 
+              bgcolor: 'red' 
             }
           }}
         >

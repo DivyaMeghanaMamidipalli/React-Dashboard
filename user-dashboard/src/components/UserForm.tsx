@@ -101,6 +101,10 @@ const UserForm: React.FC<UserFormProps> = ({ onUserSaved }) => {
       newErrors.phone = 'Phone number must be at least 10 digits';
       valid = false;
     }
+    if (userData.phone && userData.phone.length > 10) {
+      newErrors.phone = 'Phone number must be at most 10 digits';
+      valid = false;
+    }
 
     setErrors(newErrors);
     return valid;
@@ -159,15 +163,11 @@ const UserForm: React.FC<UserFormProps> = ({ onUserSaved }) => {
           textAlign: 'center'
         }}
       >
-        User Registration Form
+        User Detail Form
       </Typography>
 
       <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <TextField
-          disabled
-          label="User ID"
-          value={userData.id}
-        />
+        
         <TextField
           name="name"
           label="Name"

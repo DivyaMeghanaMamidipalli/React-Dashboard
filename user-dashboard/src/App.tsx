@@ -28,13 +28,41 @@ const App: React.FC = () => {
 
   
   const springs = useSpring({
-    from: { 
-      background: 'linear-gradient(135deg, #E3F2FD 0%, #E8EAF6 100%)'
+    from: {
+      background: 'linear-gradient(135deg, #FFFFFF 0%, #FFFFFF 100%)'
     },
     to: {
       background: `linear-gradient(135deg, 
-        ${count > 25 ? '#4A90E2' : `hsl(${210 + (count * 2)}, ${70 + count}%, ${85 - count}%)`} 0%, 
-        ${count > 25 ? '#357ABD' : `hsl(${220 + (count * 2)}, ${75 + count}%, ${80 - count}%)`} 100%)`
+        ${
+          count > 25 ? '#1E3A8A' :  // Deep blue
+          count > 23 ? '#1E44B9' :  // Deep royal blue
+          count > 21 ? '#2563EB' :  // Royal blue
+          count > 19 ? '#3B82F6' :  // Bright blue
+          count > 17 ? '#4B91F7' :  // Medium bright blue
+          count > 15 ? '#60A5FA' :  // Medium blue
+          count > 13 ? '#7AB8FB' :  // Light medium blue
+          count > 11 ? '#93C5FD' :  // Light blue
+          count > 9 ? '#ACDAFE' :  // Very light blue
+          count > 7 ? '#BAE2FF' :  // Lighter blue
+          count > 5 ? '#DBEAFE' :  // Super light blue
+          count > 3 ? '#EBF4FF' :  // Almost white blue
+          '#FFFFFF'                // White
+        } 0%, 
+        ${
+          count > 25 ? '#1E40AF' :  // Deep blue accent
+          count > 23 ? '#1E4BD1' :  // Deep royal blue accent
+          count > 21 ? '#2570EE' :  // Royal blue accent
+          count > 19 ? '#3B8AF8' :  // Bright blue accent
+          count > 17 ? '#4B9AF9' :  // Medium bright blue accent
+          count > 15 ? '#60AEFC' :  // Medium blue accent
+          count > 13 ? '#7DC3FD' :  // Light medium blue accent
+          count > 11 ? '#93CFFE' :  // Light blue accent
+          count > 9 ? '#ACE1FF' :  // Very light blue accent
+          count > 7 ? '#BAE8FF' :  // Lighter blue accent
+          count > 5 ? '#DBF0FF' :  // Super light blue accent
+          count > 3 ? '#EBF8FF' :  // Almost white blue accent
+          '#FFFFFF'                // White
+        } 100%)`
     },
     config: {
       tension: 120,
@@ -42,7 +70,6 @@ const App: React.FC = () => {
       duration: 500,
     }
   });
-
   return (
     <AuthProvider>
       <CountContext.Provider value={{ count, setCount }}>
@@ -67,22 +94,27 @@ const App: React.FC = () => {
                               <Counter />
                             </Box>
                             <Box sx={{ 
-                              backgroundColor: 'rgba(255, 255, 255, 0.8)', 
-                              p: 3, 
-                              borderRadius: 2,
-                              backdropFilter: 'blur(10px)',
-                              height: 'fit-content'  
-                            }}>
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)', 
+                            p: 4, 
+                            borderRadius: 3,
+                            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+                            backdropFilter: 'blur(10px)',
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            height: 'fit-content'
+                          }}>
                               <UserForm onUserSaved={handleUserSaved} />
                             </Box>
                             <Box sx={{ 
-                              backgroundColor: 'rgba(255, 255, 255, 0.8)', 
-                              p: 3, 
-                              borderRadius: 2,
-                              backdropFilter: 'blur(10px)'
-                            }}>
+                                backgroundColor: 'rgba(255, 255, 255, 0.9)', 
+                                p: 4, 
+                                borderRadius: 3,
+                                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+                                backdropFilter: 'blur(10px)',
+                                border: '1px solid rgba(255, 255, 255, 0.2)',
+                                height: 'fit-content'
+                              }}>
                               <RichTextEditor 
-                                  title="Latest User Details"
+                                  title="Editor with Latest User Details "
                                   initialValue={latestUser ? `
                                     <div style="font-family: Arial, sans-serif;">
                                       <h3 style="color: #2196F3; margin-bottom: 16px;">User Details</h3>
