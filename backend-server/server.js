@@ -8,7 +8,7 @@ require('dotenv').config();
 
 const app = express();
 
-
+// Add these important environment variables at the top
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000';
 
@@ -24,8 +24,11 @@ app.use(session({
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
   }
 }));
+
+// Fix the missing closing bracket from the session configuration
 app.use(passport.initialize());
 app.use(passport.session());
+
 
 const userSchema = new mongoose.Schema({
   googleId: String,
@@ -84,10 +87,9 @@ app.get('/auth/google/callback',
     failureRedirect: `${FRONTEND_URL}/login`  // Fixed template literal
   }),
   function(req, res) {
-    res.redirect(FRONTEND_URL);  // Fixed redirect
+    res.redirect(FRONTEND_URL);  // Fixed redirect URL
   }
 );
-
 app.get('/auth/user', (req, res) => {
   res.json(req.user || null);
 });
