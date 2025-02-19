@@ -3,7 +3,7 @@ import { Box, TextField, Button, MenuItem, CircularProgress, Paper, Typography }
 import { v4 as uuidv4 } from 'uuid';
 
 interface UserData {
-  id: string;
+  id?: string;
   name: string;
   address: string;
   email: string;
@@ -11,14 +11,12 @@ interface UserData {
   phone: string;
 }
 
-interface Country {
-  name: string;
-  code: string;
+interface UserFormProps {
+  onUserSaved: (userData: UserData) => void;
 }
 
-const UserForm: React.FC = () => {
+const UserForm: React.FC<UserFormProps> = ({ onUserSaved }) => {
   const [userData, setUserData] = useState<UserData>({
-    id: uuidv4(),
     name: '',
     address: '',
     email: '',
@@ -114,6 +112,13 @@ const UserForm: React.FC = () => {
     if (!validateForm()) return;
 
     const phoneNumber = userData.phone ? `${userData.countryCode}${userData.phone}` : '';
+    
+    const newUserData = {
+      ...userData,
+      id: uuidv4(),
+      phone: phoneNumber,
+      createdAt: new Date().toISOString()
+    };
 
     const existingData = localStorage.getItem('userData');
     let allUserData = [];
@@ -122,18 +127,13 @@ const UserForm: React.FC = () => {
       allUserData = JSON.parse(existingData);
     }
 
-    allUserData.push({ 
-      ...userData, 
-      phone: phoneNumber,
-      createdAt: new Date().toISOString()
-    });
-
+    allUserData.push(newUserData);
     localStorage.setItem('userData', JSON.stringify(allUserData));
 
-    setIsDirty(false);
+    onUserSaved(newUserData);
 
+    setIsDirty(false);
     setUserData({
-      id: uuidv4(),
       name: '',
       address: '',
       email: '',

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Box, Button, ButtonGroup, Paper, Typography } from '@mui/material';
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatItalicIcon from '@mui/icons-material/FormatItalic';
@@ -16,8 +16,14 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   initialValue = '', 
   onChange 
 }) => {
-  const [content, setContent] = useState(initialValue);
   const editorRef = useRef<HTMLDivElement>(null);
+
+  // Update content when initialValue changes
+  useEffect(() => {
+    if (editorRef.current) {
+      editorRef.current.innerHTML = initialValue;
+    }
+  }, [initialValue]);
 
   const handleExecCommand = (command: string, value: string = '') => {
     if (editorRef.current) {
@@ -28,7 +34,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
   const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
     const newContent = e.currentTarget.innerHTML;
-    setContent(newContent);
     onChange?.(newContent);
   };
 

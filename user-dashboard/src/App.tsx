@@ -19,6 +19,11 @@ export const CountContext = createContext<{
 }>({ count: 0, setCount: () => {} });
 
 const App: React.FC = () => {
+  const [latestUser, setLatestUser] = useState<UserData | null>(null);
+
+  const handleUserSaved = (userData: UserData) => {
+    setLatestUser(userData);
+  };
   const [count, setCount] = useState(0);
 
   
@@ -58,27 +63,40 @@ const App: React.FC = () => {
                     <Route path="/" element={
                       <ProtectedRoute>
                         <Box display="grid" gridTemplateColumns="1fr 1fr" gap={4}>
-                          <Box gridColumn="1 / -1">
-                            <Counter />
+                            <Box gridColumn="1 / -1">
+                              <Counter />
+                            </Box>
+                            <Box sx={{ 
+                              backgroundColor: 'rgba(255, 255, 255, 0.8)', 
+                              p: 3, 
+                              borderRadius: 2,
+                              backdropFilter: 'blur(10px)',
+                              height: 'fit-content'  
+                            }}>
+                              <UserForm onUserSaved={handleUserSaved} />
+                            </Box>
+                            <Box sx={{ 
+                              backgroundColor: 'rgba(255, 255, 255, 0.8)', 
+                              p: 3, 
+                              borderRadius: 2,
+                              backdropFilter: 'blur(10px)'
+                            }}>
+                              <RichTextEditor 
+                                  title="Latest User Details"
+                                  initialValue={latestUser ? `
+                                    <div style="font-family: Arial, sans-serif;">
+                                      <h3 style="color: #2196F3; margin-bottom: 16px;">User Details</h3>
+                                      <p><strong>ID:</strong> ${latestUser.id || 'N/A'}</p>
+                                      <p><strong>Name:</strong> ${latestUser.name || 'N/A'}</p>
+                                      <p><strong>Email:</strong> ${latestUser.email || 'N/A'}</p>
+                                      <p><strong>Address:</strong> ${latestUser.address || 'N/A'}</p>
+                                      <p><strong>Phone:</strong> ${latestUser.phone || 'N/A'}</p>
+                                      <p><strong>Added:</strong> ${new Date().toLocaleString()}</p>
+                                    </div>
+                                  ` : '<p>No user data yet</p>'}
+                                />
+                            </Box>
                           </Box>
-                          <Box sx={{ 
-                            backgroundColor: 'rgba(255, 255, 255, 0.8)', 
-                            p: 3, 
-                            borderRadius: 2,
-                            backdropFilter: 'blur(10px)',
-                            height: 'fit-content'  
-                          }}>
-                            <UserForm />
-                          </Box>
-                          <Box sx={{ 
-                            backgroundColor: 'rgba(255, 255, 255, 0.8)', 
-                            p: 3, 
-                            borderRadius: 2,
-                            backdropFilter: 'blur(10px)'
-                          }}>
-                            <RichTextEditor />
-                          </Box>
-                        </Box>
                       </ProtectedRoute>
                     } />
                     <Route path="/profile-dashboard" element={
