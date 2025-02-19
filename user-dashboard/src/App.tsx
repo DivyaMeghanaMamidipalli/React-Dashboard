@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Box, Container, CssBaseline, Typography } from '@mui/material';
+import { Box, Container, CssBaseline } from '@mui/material';
 import { useSpring, animated } from '@react-spring/web';
 import Counter from './components/Counter';
 import UserForm from './components/UserForm';

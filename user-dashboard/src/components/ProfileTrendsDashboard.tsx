@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import {
   LineChart,
   Line,
-  BarChart,
-  Bar,
   PieChart,
   Pie,
   XAxis,
@@ -15,10 +13,17 @@ import {
 } from 'recharts';
 import UserDataDisplay from './UserDataDisplay';
 
+
+interface UserData {
+  address?: string;
+  createdAt: string;
+  deletedAt?: string;
+};
+
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300'];
 
 const ProfileTrendsDashboard = () => {
-  const [profileData, setProfileData] = useState([]);
+  const [profileData, setProfileData] = useState<UserData[]>([]);
   const [addressStats, setAddressStats] = useState([]);
   const [timeStats, setTimeStats] = useState([]);
 
