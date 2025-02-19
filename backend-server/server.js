@@ -84,8 +84,8 @@ app.get('/auth/google',
 
 app.get('/auth/google/callback', 
   passport.authenticate('google', { 
-    failureRedirect: `${FRONTEND_URL}/login`,
-    successRedirect: FRONTEND_URL  // Add explicit success redirect
+    successRedirect: `${FRONTEND_URL}` ,
+    failureRedirect: `${FRONTEND_URL}/login`
   })
 );
 app.get('/auth/user', (req, res) => {
