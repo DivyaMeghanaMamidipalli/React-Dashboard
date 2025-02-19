@@ -9,6 +9,9 @@ require('dotenv').config();
 const app = express();
 
 
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000';
+
 // Middleware
 app.use(cors({ origin: FRONTEND_URL, credentials: true }));
 app.use(express.json());
@@ -17,9 +20,10 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // Required for cross-site cookies in production
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
   }
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -36,7 +40,7 @@ const User = mongoose.model('User', userSchema);
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "${BACKEND_URL}/auth/google/callback"
+    callbackURL: `${BACKEND_URL}/auth/google/callback`  // Fixed template literal
   },
   async function(accessToken, refreshToken, profile, cb) {
     try {
@@ -76,9 +80,11 @@ app.get('/auth/google',
 );
 
 app.get('/auth/google/callback', 
-  passport.authenticate('google', { failureRedirect: '${FRONTEND_URL}/login' }),
+  passport.authenticate('google', { 
+    failureRedirect: `${FRONTEND_URL}/login`  // Fixed template literal
+  }),
   function(req, res) {
-    res.redirect('FRONTEND_URL');
+    res.redirect(FRONTEND_URL);  // Fixed redirect
   }
 );
 
