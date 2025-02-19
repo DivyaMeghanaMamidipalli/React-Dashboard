@@ -84,11 +84,9 @@ app.get('/auth/google',
 
 app.get('/auth/google/callback', 
   passport.authenticate('google', { 
-    failureRedirect: `${FRONTEND_URL}/login`  // Fixed template literal
-  }),
-  function(req, res) {
-    res.redirect(FRONTEND_URL);  // Fixed redirect URL
-  }
+    failureRedirect: `${FRONTEND_URL}/login`,
+    successRedirect: FRONTEND_URL  // Add explicit success redirect
+  })
 );
 app.get('/auth/user', (req, res) => {
   res.json(req.user || null);
