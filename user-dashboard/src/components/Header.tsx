@@ -5,7 +5,7 @@ const Header = () => {
   return (
     <AppBar position="static" sx={{ 
       background: 'linear-gradient(135deg, #1E3C72 0%, #2A5298 100%)',
-      marginBottom: 0  // Removed margin
+      marginBottom: 0 
     }}>
       <Toolbar>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>

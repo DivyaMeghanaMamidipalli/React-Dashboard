@@ -33,19 +33,17 @@ const UserForm: React.FC = () => {
   const [countries, setCountries] = useState<Country[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Add beforeunload event handler
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (isDirty) {
         e.preventDefault();
-        e.returnValue = ''; // This is required for Chrome
-        return ''; // This is required for other browsers
+        e.returnValue = '';
+        return ''; 
       }
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
 
-    // Cleanup
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };

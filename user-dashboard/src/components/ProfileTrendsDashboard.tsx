@@ -44,10 +44,8 @@ const ProfileTrendsDashboard = () => {
     }));
     setAddressStats(addressData);
 
-    // Create a map of dates to track both creations and deletions
     const dateMap = new Map();
 
-    // Track user creations
     userData.forEach(entry => {
       const date = new Date(entry.createdAt).toLocaleDateString();
       if (!dateMap.has(date)) {
@@ -55,8 +53,7 @@ const ProfileTrendsDashboard = () => {
       }
       dateMap.get(date).creations += 1;
     });
-
-    // Track user deletions 
+ 
     deletedUsers.forEach(entry => {
       const date = new Date(entry.deletedAt).toLocaleDateString();
       if (!dateMap.has(date)) {
@@ -65,7 +62,6 @@ const ProfileTrendsDashboard = () => {
       dateMap.get(date).deletions += 1;
     });
 
-    // Convert map to array and sort by date
     const timeData = Array.from(dateMap.values())
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 

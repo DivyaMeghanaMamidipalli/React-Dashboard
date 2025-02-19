@@ -36,7 +36,6 @@ const UserDataDisplay: React.FC = () => {
   };
 
   const handleDelete = (userId: string) => {
-    // Track deletion in deletedUsers
     const deletedUsers = JSON.parse(localStorage.getItem('deletedUsers') || '[]');
     deletedUsers.push({
       userId,
@@ -44,7 +43,6 @@ const UserDataDisplay: React.FC = () => {
     });
     localStorage.setItem('deletedUsers', JSON.stringify(deletedUsers));
 
-    // Remove user from userData
     const updatedData = savedUserData.filter(user => user.id !== userId);
     localStorage.setItem('userData', JSON.stringify(updatedData));
     setSavedUserData(updatedData);
