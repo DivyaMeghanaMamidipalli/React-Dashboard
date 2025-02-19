@@ -33,7 +33,7 @@ const User = mongoose.model('User', userSchema);
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:5000/auth/google/callback"
+    callbackURL: "${BACKEND_URL}/auth/google/callback"
   },
   async function(accessToken, refreshToken, profile, cb) {
     try {
@@ -73,9 +73,9 @@ app.get('/auth/google',
 );
 
 app.get('/auth/google/callback', 
-  passport.authenticate('google', { failureRedirect: '/login' }),
+  passport.authenticate('google', { failureRedirect: '${FRONTEND_URL}/login' }),
   function(req, res) {
-    res.redirect('http://localhost:5173');
+    res.redirect('FRONTEND_URL');
   }
 );
 
