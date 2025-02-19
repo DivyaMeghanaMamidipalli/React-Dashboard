@@ -1,5 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+
 interface User {
   _id: string;
   googleId: string;
@@ -36,7 +38,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const checkUser = async () => {
     try {
       setError(null);
-      const response = await fetch('https://react-dashboard-backend-45op.onrender.com/auth/user', {
+      const response = await fetch(`${BACKEND_URL}/auth/user`, {
         credentials: 'include'
       });
       
@@ -55,13 +57,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const login = () => {
-    window.location.href = 'https://react-dashboard-backend-45op.onrender.com/auth/google';
+    window.location.href = `${BACKEND_URL}/auth/google`;
   };
 
   const logout = async () => {
     try {
       setError(null);
-      const response = await fetch('https://react-dashboard-backend-45op.onrender.com/auth/logout', {
+      const response = await fetch(`${BACKEND_URL}/auth/logout`, {
         credentials: 'include'
       });
       
