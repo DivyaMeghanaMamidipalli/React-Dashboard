@@ -59,7 +59,7 @@ passport.use(new GoogleStrategy({
         });
       }
       
-      return cb(null, user);
+      return cb( user,null);
     } catch (err) {
       return cb(err, null);
     }
@@ -85,11 +85,17 @@ app.get('/auth/google',
 );
 
 app.get('/auth/google/callback', 
-  passport.authenticate('google', { 
-    failureRedirect: `${FRONTEND_URL}/login`
-  }),
-  function(req, res) {
-    res.redirect(FRONTEND_URL);
+  (req, res, next) => {
+    passport.authenticate('google', { 
+      failureRedirect: `${FRONTEND_URL}/login`,
+      failureMessage: true
+    })(req, res, (err) => {
+      if (err) {
+        console.error('Authentication Error:', err);
+        return res.redirect(`${FRONTEND_URL}/login`);
+      }
+      res.redirect(FRONTEND_URL);
+    });
   }
 );
 
