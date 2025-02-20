@@ -13,7 +13,13 @@ const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000';
 
 // Middleware
-app.use(cors({ origin: FRONTEND_URL, credentials: true }));
+app.use(cors({
+  origin: FRONTEND_URL,
+  credentials: true,
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 app.use(session({
   secret: process.env.SESSION_SECRET || 'your-secret-key',
@@ -22,7 +28,9 @@ app.use(session({
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-  }
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  },
+  store: 
 }));
 
 // Fix the missing closing bracket from the session configuration
@@ -43,7 +51,7 @@ const User = mongoose.model('User', userSchema);
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: `${BACKEND_URL}/auth/google/callback`  // Fixed template literal
+    callbackURL: `${BACKEND_URL}/auth/google/callback`  
   },
   async function(accessToken, refreshToken, profile, cb) {
     try {
@@ -84,8 +92,8 @@ app.get('/auth/google',
 
 app.get('/auth/google/callback', 
   passport.authenticate('google', { 
-    successRedirect: `${FRONTEND_URL}` ,
-    failureRedirect: `${FRONTEND_URL}/login`
+    failureRedirect: `${FRONTEND_URL}/login`,
+    successRedirect: `${FRONTEND_URL}/?auth=success`  
   })
 );
 app.get('/auth/user', (req, res) => {

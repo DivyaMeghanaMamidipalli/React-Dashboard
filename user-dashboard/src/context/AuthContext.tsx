@@ -32,7 +32,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    checkUser();
+    const urlParams = new URLSearchParams(window.location.search);
+    const authSuccess = urlParams.get('auth');
+    
+    if (authSuccess === 'success') {
+      window.history.replaceState({}, '', window.location.pathname);
+      checkUser();
+    } else {
+      checkUser();
+    }
   }, []);
 
   const checkUser = async () => {
