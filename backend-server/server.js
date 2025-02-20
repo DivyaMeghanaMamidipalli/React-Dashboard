@@ -26,11 +26,11 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
-  },
-  store: 
+    secure: true, // Since render.com uses HTTPS
+    sameSite: 'none', // Important for cross-site cookies
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    domain: '.onrender.com' // Allow cookies for onrender.com domain
+  }
 }));
 
 // Fix the missing closing bracket from the session configuration
