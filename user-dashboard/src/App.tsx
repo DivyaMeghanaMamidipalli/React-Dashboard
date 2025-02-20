@@ -39,7 +39,7 @@ const App: React.FC = () => {
           count > 21 ? '#2563EB' :  // Royal blue
           count > 19 ? '#3B82F6' :  // Bright blue
           count > 17 ? '#4B91F7' :  // Medium bright blue
-          count > 15 ? '#60A5FA' :  // Medium blue
+          count > 15 ? '#60A5FA' :  
           count > 13 ? '#7AB8FB' :  // Light medium blue
           count > 11 ? '#93C5FD' :  // Light blue
           count > 9 ? '#ACDAFE' :  // Very light blue
@@ -72,6 +72,8 @@ const App: React.FC = () => {
   });
   return (
     <AuthProvider>
+
+      
       <CountContext.Provider value={{ count, setCount }}>
         <Router>
           <Box display="flex" flexDirection="column" minHeight="100vh">
