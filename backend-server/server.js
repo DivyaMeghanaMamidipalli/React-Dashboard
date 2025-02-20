@@ -96,7 +96,17 @@ app.get('/auth/google/callback',
     successRedirect: `${FRONTEND_URL}/?auth=success`  
   })
 );
+
+
 app.get('/auth/user', (req, res) => {
+  console.log('Session:', req.session);
+  console.log('User:', req.user);
+  console.log('Cookies:', req.cookies);
+  
+  if (!req.user) {
+    console.log('No user found in session');
+  }
+  
   res.json(req.user || null);
 });
 
