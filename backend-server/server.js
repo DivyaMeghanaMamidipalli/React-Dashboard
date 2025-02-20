@@ -9,7 +9,7 @@ require('dotenv').config();
 const app = express();
 
 // Add these important environment variables at the top
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000';
 
 // Middleware
@@ -25,12 +25,6 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'your-secret-key',
   resave: false,
   saveUninitialized: false,
-  cookie: {
-    secure: true, // Since render.com uses HTTPS
-    sameSite: 'none', // Important for cross-site cookies
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    domain: '.onrender.com' // Allow cookies for onrender.com domain
-  }
 }));
 
 // Fix the missing closing bracket from the session configuration
@@ -92,38 +86,27 @@ app.get('/auth/google',
 
 app.get('/auth/google/callback', 
   passport.authenticate('google', { 
-    failureRedirect: `${FRONTEND_URL}/login`,
-    successRedirect: `${FRONTEND_URL}/?auth=success`  
-  })
+    failureRedirect: `${FRONTEND_URL}/login`
+  }),
+  function(req, res) {
+    res.redirect(FRONTEND_URL);
+  }
 );
 
 
 app.get('/auth/user', (req, res) => {
-  console.log('Session:', req.session);
-  console.log('User:', req.user);
-  console.log('Cookies:', req.cookies);
-  
-  if (!req.user) {
-    console.log('No user found in session');
-  }
-  
+
   res.json(req.user || null);
 });
 
 app.get('/auth/logout', (req, res) => {
-    req.logout((err) => {
-      if (err) {
-        return res.status(500).json({ message: 'Error logging out' });
-      }
-      req.session.destroy((err) => {
-        if (err) {
-          return res.status(500).json({ message: 'Error destroying session' });
-        }
-        res.clearCookie('connect.sid'); // Clear the session cookie
-        res.json({ message: 'Logged out successfully' });
-      });
-    });
+  req.logout((err) => {
+    if (err) {
+      return res.status(500).json({ message: 'Error logging out', error: err });
+    }
+    res.json({ message: 'Logged out successfully' });
   });
+});
 
 
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/userauth')
